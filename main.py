@@ -48,6 +48,34 @@ async def run_socialX(language: str):
 async def run_submit(language: str):
     from scripts.submit import run_submit as submit_run
     await submit_run(language)
+
+async def run_badge6days(language: str):
+    from scripts.badge6days import run_badge6days as badge6days_run
+    await badge6days_run(language)
+
+async def run_faucet(language: str):
+    from scripts.faucet import run_faucet as faucet_run
+    await faucet_run(language)
+
+async def run_social(language: str):
+    from scripts.social import run_social as social_run
+    await social_run(language)
+
+async def run_creates(language: str):
+    from scripts.creates import run_creates as creates_run
+    await creates_run(language)
+
+async def run_sendtx(language: str):
+    from scripts.sendtx import run_sendtx as sendtx_run
+    await sendtx_run(language)
+
+async def run_transactions(language: str):
+    from scripts.transactions import run_transactions as transactions_run
+    await transactions_run(language)
+
+async def run_holding(language: str):
+    from scripts.holding import run_holding as holding_run
+    await holding_run(language)
    
 async def cmd_exit(language: str):
     messages = {"vi": "Đang thoát...", "en": "Exiting..."}
@@ -55,6 +83,14 @@ async def cmd_exit(language: str):
     sys.exit(0)
 
 SCRIPT_MAP = {
+    "badge6days" run_badge6days,
+    "faucet": run_faucet,
+    "social": run_social,
+    "creates": run_creates,
+    "sendtx": run_sendtx,
+    "transactions": run_transactions,
+    "holding": run_holding,
+    
     "socialX": run_socialX,
     "submit": run_submit,
     "exit": cmd_exit
@@ -64,14 +100,35 @@ SCRIPT_MAP = {
 def get_available_scripts(language):
     scripts = {
         'vi': [
-            {"name": "1. Tự động hoàn thành nhiệm vụ DIRECTIVES ( Login X )", "value": "socialX"},
-            {"name": "2. Tự động submit nhiệm vụ Email | Share ( Login X )", "value": "submit"},
+            {"name": "$. Nhân Badge → EARLY.BADGE [ Kết thúc 6 ngày ]", "value": "badge6days"},
+            
+            {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
+            {"name": "2. Tự động hoàn thành nhiệm vụ Exploration", "value": "social"},
+            {"name": "3. Tự động hoàn thành mở Quantum Crates", "value": "creates"},
+            {"name": "4. Gửi TX ngẫu nhiên hoặc File (address.txt)", "value": "sendtx"},
+            {"name": "5. Tự động xác nhận nhiệm vụ Transactions", "value": "transactions"},
+            {"name": "6. Tự động xác nhận nhiệm vụ Holding", "value": "holding"},
+            
+
+            
+            {"name": "#. Tự động hoàn thành nhiệm vụ DIRECTIVES ( Login X )", "value": "socialX"},
+            {"name": "#. Tự động submit nhiệm vụ Email | Share ( Login X )", "value": "submit"},
             
             {"name": "X. Thoát", "value": "exit"},
         ],
         'en': [
-            {"name": "1. Automatic task DIRECTIVES ( Login X )", "value": "socialX"},
-            {"name": "2. Automatic submit tasks Email | Share ( Login X )", "value": "submit"},
+            {"name": "$. Claim Badge → EARLY.BADGE [ End 6 days ]", "value": "badge6days"},
+            
+            {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
+            {"name": "2. Automatic tasks Exploration", "value": "social"},
+            {"name": "3. Automatic open Quantum Crates", "value": "creates"},
+            {"name": "4. Send TX random or File (address.txt)", "value": "sendtx"},
+            {"name": "5. Automatically define tasks Transactions", "value": "transactions"},
+            {"name": "6. Automatically define tasks Holding", "value": "holding"},
+
+            
+            {"name": "#. Automatic task DIRECTIVES ( Login X )", "value": "socialX"},
+            {"name": "#. Automatic submit tasks Email | Share ( Login X )", "value": "submit"},
 
             {"name": "X. Thoát", "value": "exit"},
         ]
