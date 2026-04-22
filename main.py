@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from datetime import datetime, timedelta
 from colorama import init, Fore, Style
 import inquirer
 
@@ -21,18 +22,18 @@ def _banner():
     banner = r"""
 
 
-██████╗░░█████╗░░█████╗░██╗░░██╗░█████╗░██╗███╗░░██╗
-██╔══██╗██╔══██╗██╔══██╗██║░░██║██╔══██╗██║████╗░██║
-██║░░██║███████║██║░░╚═╝███████║███████║██║██╔██╗██║
-██║░░██║██╔══██║██║░░██╗██╔══██║██╔══██║██║██║╚████║
-██████╔╝██║░░██║╚█████╔╝██║░░██║██║░░██║██║██║░╚███║
-╚═════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝╚═╝░░╚══╝
+██████╗░░█████╗░░█████╗░██╗░░██╗░█████╗░██╗███╗░░██╗  ████████╗███████╗░██████╗████████╗███╗░░██╗███████╗████████╗
+██╔══██╗██╔══██╗██╔══██╗██║░░██║██╔══██╗██║████╗░██║  ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝████╗░██║██╔════╝╚══██╔══╝
+██║░░██║███████║██║░░╚═╝███████║███████║██║██╔██╗██║  ░░░██║░░░█████╗░░╚█████╗░░░░██║░░░██╔██╗██║█████╗░░░░░██║░░░
+██║░░██║██╔══██║██║░░██╗██╔══██║██╔══██║██║██║╚████║  ░░░██║░░░██╔══╝░░░╚═══██╗░░░██║░░░██║╚████║██╔══╝░░░░░██║░░░
+██████╔╝██║░░██║╚█████╔╝██║░░██║██║░░██║██║██║░╚███║  ░░░██║░░░███████╗██████╔╝░░░██║░░░██║░╚███║███████╗░░░██║░░░
+╚═════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝╚═╝░░╚══╝  ░░░╚═╝░░░╚══════╝╚═════╝░░░░╚═╝░░░╚═╝░░╚══╝╚══════╝░░░╚═╝░░░
 
 
     """
     print(f"{Fore.GREEN}{banner:^80}{Style.RESET_ALL}")
     print(f"{Fore.GREEN}{'═' * BORDER_WIDTH}{Style.RESET_ALL}")
-    print_border("DACHAIN WAITLIST", Fore.GREEN)
+    print_border("DACHAIN TESTNET", Fore.GREEN)
     print(f"{Fore.YELLOW}│ {'Website'}: {Fore.CYAN}https://thogtoolhub.com/{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}│ {'Discord'}: {Fore.CYAN}https://discord.gg/MnmYBKfHQf{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}│ {'Channel Telegram'}: {Fore.CYAN}https://t.me/thogairdrops{Style.RESET_ALL}")
@@ -42,12 +43,20 @@ def _clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 async def run_socialX(language: str):
-    from scripts.socialX import run_socialX as socialX_run
-    await socialX_run(language)
+    msgs = {
+        "vi": "Nhiệm vụ đã kết thúc! Vui lòng thực hiện lại sau....",
+        "en": "Task has ended! Please try again later...."
+    }
+    print_border(msgs[language], Fore.RED)
+    print()
 
 async def run_submit(language: str):
-    from scripts.submit import run_submit as submit_run
-    await submit_run(language)
+    msgs = {
+        "vi": "Nhiệm vụ đã kết thúc! Vui lòng thực hiện lại sau....",
+        "en": "Task has ended! Please try again later...."
+    }
+    print_border(msgs[language], Fore.RED)
+    print()
 
 async def run_badge6days(language: str):
     from scripts.badge6days import run_badge6days as badge6days_run
@@ -76,31 +85,62 @@ async def run_transactions(language: str):
 async def run_holding(language: str):
     from scripts.holding import run_holding as holding_run
     await holding_run(language)
-   
+
+async def run_mintrank(language: str):
+    from scripts.mintrank import run_mintrank as mintrank_run
+    await mintrank_run(language)
+
+async def run_burn(language: str):
+    from scripts.burn import run_burn as burn_run
+    await burn_run(language)
+
+async def run_deposit(language: str):
+    from scripts.deposit import run_deposit as deposit_run
+    await deposit_run(language)
+
+async def run_withdraw(language: str):
+    from scripts.withdraw import run_withdraw as withdraw_run
+    await withdraw_run(language)
+
 async def cmd_exit(language: str):
     messages = {"vi": "Đang thoát...", "en": "Exiting..."}
     print_border(messages[language], Fore.GREEN)
     sys.exit(0)
 
 SCRIPT_MAP = {
-    "badge6days" run_badge6days,
+    "badge6days": run_badge6days,
     "faucet": run_faucet,
     "social": run_social,
     "creates": run_creates,
     "sendtx": run_sendtx,
     "transactions": run_transactions,
     "holding": run_holding,
-    
+    "mintrank": run_mintrank,
+    "burn": run_burn,
+    "deposit": run_deposit,
+    "withdraw": run_withdraw,
     "socialX": run_socialX,
     "submit": run_submit,
     "exit": cmd_exit
 }
 
 
+def _badge6days_remaining(language: str) -> str:
+    BADGE_END = datetime(2026, 4, 25, 20, 0, 0)
+    now         = datetime.now()
+    if now >= BADGE_END:
+        return "Đã kết thúc" if language == 'vi' else "Ended"
+    remaining = BADGE_END - now
+    days  = remaining.days
+    hours = remaining.seconds // 3600
+    if language == 'vi':
+        return f"{days} ngày {hours} giờ"
+    return f"{days}d {hours}h"
+
 def get_available_scripts(language):
     scripts = {
         'vi': [
-            {"name": "$. Nhân Badge → EARLY.BADGE [ Kết thúc 6 ngày ]", "value": "badge6days"},
+            {"name": f"$. Nhận Badge → EARLY.BADGE [ Kết thúc sau {_badge6days_remaining('vi')} ]", "value": "badge6days"},
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Tự động hoàn thành nhiệm vụ Exploration", "value": "social"},
@@ -108,16 +148,18 @@ def get_available_scripts(language):
             {"name": "4. Gửi TX ngẫu nhiên hoặc File (address.txt)", "value": "sendtx"},
             {"name": "5. Tự động xác nhận nhiệm vụ Transactions", "value": "transactions"},
             {"name": "6. Tự động xác nhận nhiệm vụ Holding", "value": "holding"},
-            
+            {"name": "7. Mint Rank NFT → Nhận QE theo rank", "value": "mintrank"},
+            {"name": "8. Burn DACC → Nhận QE (1 DACC = 1000 QE)", "value": "burn"},
+            {"name": "9. Stake DACC (Deposit) → Nhận Badge + QE", "value": "deposit"},
+            {"name": "10. Withdraw DACC (Unstake) → Rút về ví", "value": "withdraw"},
 
-            
-            {"name": "#. Tự động hoàn thành nhiệm vụ DIRECTIVES ( Login X )", "value": "socialX"},
-            {"name": "#. Tự động submit nhiệm vụ Email | Share ( Login X )", "value": "submit"},
+            {"name": "#. Tự động hoàn thành nhiệm vụ DIRECTIVES ( Login X ) [Đã kết thúc]", "value": "socialX"},
+            {"name": "#. Tự động submit nhiệm vụ Email | Share ( Login X ) [Đã kết thúc]", "value": "submit"},
             
             {"name": "X. Thoát", "value": "exit"},
         ],
         'en': [
-            {"name": "$. Claim Badge → EARLY.BADGE [ End 6 days ]", "value": "badge6days"},
+            {"name": f"$. Claim Badge → EARLY.BADGE [ Ends in {_badge6days_remaining('en')} ]", "value": "badge6days"},
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Automatic tasks Exploration", "value": "social"},
@@ -125,10 +167,13 @@ def get_available_scripts(language):
             {"name": "4. Send TX random or File (address.txt)", "value": "sendtx"},
             {"name": "5. Automatically define tasks Transactions", "value": "transactions"},
             {"name": "6. Automatically define tasks Holding", "value": "holding"},
+            {"name": "7. Mint Rank NFT → Earn QE by rank", "value": "mintrank"},
+            {"name": "8. Burn DACC → Earn QE (1 DACC = 1000 QE)", "value": "burn"},
+            {"name": "9. Stake DACC (Deposit) → Earn Badge + QE", "value": "deposit"},
+            {"name": "10. Withdraw DACC (Unstake) → Back to wallet", "value": "withdraw"},
 
-            
-            {"name": "#. Automatic task DIRECTIVES ( Login X )", "value": "socialX"},
-            {"name": "#. Automatic submit tasks Email | Share ( Login X )", "value": "submit"},
+            {"name": "#. Automatic task DIRECTIVES ( Login X ) [Ended]", "value": "socialX"},
+            {"name": "#. Automatic submit tasks Email | Share ( Login X ) [Ended]", "value": "submit"},
 
             {"name": "X. Thoát", "value": "exit"},
         ]
