@@ -70,9 +70,9 @@ async def run_social(language: str):
     from scripts.social import run_social as social_run
     await social_run(language)
 
-async def run_creates(language: str):
-    from scripts.creates import run_creates as creates_run
-    await creates_run(language)
+async def run_crates(language: str):
+    from scripts.crates import run_crates as crates_run
+    await crates_run(language)
 
 async def run_sendtx(language: str):
     from scripts.sendtx import run_sendtx as sendtx_run
@@ -111,7 +111,7 @@ SCRIPT_MAP = {
     "badge6days": run_badge6days,
     "faucet": run_faucet,
     "social": run_social,
-    "creates": run_creates,
+    "crates": run_crates,
     "sendtx": run_sendtx,
     "transactions": run_transactions,
     "holding": run_holding,
@@ -144,7 +144,7 @@ def get_available_scripts(language):
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Tự động hoàn thành nhiệm vụ Exploration", "value": "social"},
-            {"name": "3. Tự động hoàn thành mở Quantum Crates", "value": "creates"},
+            {"name": "3. Tự động hoàn thành mở Quantum Crates", "value": "crates"},
             {"name": "4. Gửi TX ngẫu nhiên hoặc File (address.txt)", "value": "sendtx"},
             {"name": "5. Tự động xác nhận nhiệm vụ Transactions", "value": "transactions"},
             {"name": "6. Tự động xác nhận nhiệm vụ Holding", "value": "holding"},
@@ -163,7 +163,7 @@ def get_available_scripts(language):
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Automatic tasks Exploration", "value": "social"},
-            {"name": "3. Automatic open Quantum Crates", "value": "creates"},
+            {"name": "3. Automatic open Quantum Crates", "value": "crates"},
             {"name": "4. Send TX random or File (address.txt)", "value": "sendtx"},
             {"name": "5. Automatically define tasks Transactions", "value": "transactions"},
             {"name": "6. Automatically define tasks Holding", "value": "holding"},
