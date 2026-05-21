@@ -62,6 +62,10 @@ async def run_badge6days(language: str):
     from scripts.badge6days import run_badge6days as badge6days_run
     await badge6days_run(language)
 
+async def run_flash_badge(language: str):
+    from scripts.flash_badge_30days import run_flash_badge as flash_badge_run
+    await flash_badge_run(language)
+
 async def run_faucet(language: str):
     from scripts.faucet import run_faucet as faucet_run
     await faucet_run(language)
@@ -70,9 +74,9 @@ async def run_social(language: str):
     from scripts.social import run_social as social_run
     await social_run(language)
 
-async def run_crates(language: str):
-    from scripts.crates import run_crates as crates_run
-    await crates_run(language)
+async def run_creates(language: str):
+    from scripts.creates import run_creates as creates_run
+    await creates_run(language)
 
 async def run_sendtx(language: str):
     from scripts.sendtx import run_sendtx as sendtx_run
@@ -109,9 +113,10 @@ async def cmd_exit(language: str):
 
 SCRIPT_MAP = {
     "badge6days": run_badge6days,
+    "flash_badge": run_flash_badge,
     "faucet": run_faucet,
     "social": run_social,
-    "crates": run_crates,
+    "creates": run_creates,
     "sendtx": run_sendtx,
     "transactions": run_transactions,
     "holding": run_holding,
@@ -137,14 +142,34 @@ def _badge6days_remaining(language: str) -> str:
         return f"{days} ngày {hours} giờ"
     return f"{days}d {hours}h"
 
+def _flash_badge_remaining(language: str) -> str:
+    """Tính thời gian còn lại của Flash Badge window (48h, reset 14:00 UTC mỗi 2 ngày)."""
+    from datetime import timezone
+    now_utc = datetime.now(timezone.utc)
+    ref = datetime(2026, 5, 21, 14, 0, 0, tzinfo=timezone.utc)
+    cycle = timedelta(days=2)
+    diff = now_utc - ref
+    periods_passed = diff / cycle
+    import math
+    next_end = ref + cycle * math.ceil(periods_passed)
+    if now_utc >= next_end:
+        next_end += cycle
+    remaining = next_end - now_utc
+    hours   = int(remaining.total_seconds() // 3600)
+    minutes = int((remaining.total_seconds() % 3600) // 60)
+    if language == 'vi':
+        return f"còn {hours} giờ {minutes} phút"
+    return f"{hours}h {minutes}m left"
+
 def get_available_scripts(language):
     scripts = {
         'vi': [
             {"name": f"$. Nhận Badge → EARLY.BADGE [ Kết thúc sau {_badge6days_remaining('vi')} ]", "value": "badge6days"},
+            {"name": f"$$. Claim Flash Badge → 30 DAYS OF INCEPTION [ x2 QE | {_flash_badge_remaining('vi')} ]", "value": "flash_badge"},
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Tự động hoàn thành nhiệm vụ Exploration", "value": "social"},
-            {"name": "3. Tự động hoàn thành mở Quantum Crates", "value": "crates"},
+            {"name": "3. Tự động hoàn thành mở Quantum Crates", "value": "creates"},
             {"name": "4. Gửi TX ngẫu nhiên hoặc File (address.txt)", "value": "sendtx"},
             {"name": "5. Tự động xác nhận nhiệm vụ Transactions", "value": "transactions"},
             {"name": "6. Tự động xác nhận nhiệm vụ Holding", "value": "holding"},
@@ -160,10 +185,11 @@ def get_available_scripts(language):
         ],
         'en': [
             {"name": f"$. Claim Badge → EARLY.BADGE [ Ends in {_badge6days_remaining('en')} ]", "value": "badge6days"},
+            {"name": f"$$. Claim Flash Badge → 30 DAYS OF INCEPTION [ x2 QE | {_flash_badge_remaining('en')} ]", "value": "flash_badge"},
             
             {"name": "1. Faucet DACC → DAC Inception", "value": "faucet"},
             {"name": "2. Automatic tasks Exploration", "value": "social"},
-            {"name": "3. Automatic open Quantum Crates", "value": "crates"},
+            {"name": "3. Automatic open Quantum Crates", "value": "creates"},
             {"name": "4. Send TX random or File (address.txt)", "value": "sendtx"},
             {"name": "5. Automatically define tasks Transactions", "value": "transactions"},
             {"name": "6. Automatically define tasks Holding", "value": "holding"},
@@ -286,12 +312,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
